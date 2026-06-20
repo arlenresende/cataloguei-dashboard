@@ -1,7 +1,7 @@
 
 
 
-import GoogleAuth from "@/components/google-auth";
+import GoogleAuth from "@/components/googleAuth";
 import AuthHeader from "../AuthHeader";
 import BackDash from "../BackDash";
 import AuthFooter from "../AuthFooter";
