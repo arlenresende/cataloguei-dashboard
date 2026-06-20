@@ -9,8 +9,6 @@ import DemographicCard from "../../components/ecommerce/DemographicCard";
 import PageMeta from "../../components/common/PageMeta";
 import EcommerceMetrics from "@/components/ecommerce/EcommerceMetrics";
 import { useAuth } from "@/hooks/useAuth";
-import OnBoard from "@/components/onBoard";
-
 
 export default function Home() {
   const { user } = useAuth();
@@ -38,9 +36,7 @@ export default function Home() {
     );
   }
 
-  if (user) {
-    return <OnBoard />;
-  }
+
 
   return (
     <>

@@ -61,6 +61,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+
+
   function signIn(token: string, user: User) {
     setToken(token);
     setUser(user);
@@ -73,7 +75,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   function setProfile(profile: User) {
     setUser((prev) => {
-      const merged = { ...(prev ?? {}), ...profile } as User;
+      // Garante que o id do profile seja sempre usado
+      const merged = { ...(prev ?? {}), ...profile, id: profile.id ?? prev?.id } as User;
       localStorage.setItem('@app:user', JSON.stringify(merged));
       return merged;
     });

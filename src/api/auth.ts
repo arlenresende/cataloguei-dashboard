@@ -1,4 +1,5 @@
 import { api } from '@/helpers/api';
+import { type UserProfileEnvelope } from '@/types/userProfile';
 
 export interface LoginPayload {
   email: string;
@@ -59,33 +60,6 @@ export async function forgotPasswordRequest(
   return response.data;
 }
 
-export type UserProfileEnvelope = ApiEnvelope<{
-  id: string;
-  name: string;
-  email: string;
-  avatar: string | null;
-  document: string | null;
-  cellPhone: string | null;
-  birthDate: string | null;
-  gender: 'MALE' | 'FEMALE' | 'OTHER' | 'PREFER_NOT_TO_SAY' | string | null;
-  role: 'USER' | 'ADMIN' | string;
-  isActive: boolean;
-  emailVerified: boolean;
-  phoneVerified: boolean;
-  profileCompleted: boolean;
-  stripeCustomerId: string | null;
-  address: {
-    street: string;
-    number: string;
-    neighborhood: string;
-    city: string;
-    state: string;
-    zip_code: string;
-    country: string;
-    complement?: string;
-  } | null;
-}>;
-
 export async function profileRequest(): Promise<UserProfileEnvelope> {
   const response = await api.get('/users/profile');
   return response.data;
@@ -95,35 +69,17 @@ export interface UpdateProfilePayload {
   name?: string;
   email?: string;
   password?: string;
-  avatar?: string | null;
+  avatar?: string | File | null;
   document?: string | null;
   cellPhone?: string | null;
   birthDate?: string | null;
   gender?: 'MALE' | 'FEMALE' | 'OTHER' | 'PREFER_NOT_TO_SAY' | string | null;
-  role?: 'USER' | 'ADMIN' | string;
-  isActive?: boolean;
-  emailVerified?: boolean;
-  phoneVerified?: boolean;
-  address?: {
-    street?: string;
-    number?: string;
-    neighborhood?: string;
-    city?: string;
-    state?: string;
-    zip_code?: string;
-    country?: string;
-    complement?: string;
-  } | null;
 }
-
-export type UpdateProfileEnvelope = UserProfileEnvelope;
 
 export async function updateProfileRequest(
   id: string,
-  data: FormData,
-): Promise<UpdateProfileEnvelope> {
-  const response = await api.patch(`/users/${id}`, data, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  data: Record<string, any>,
+): Promise<UserProfileEnvelope> {
+  const response = await api.patch(`/users/${id}`, data);
   return response.data;
 }
