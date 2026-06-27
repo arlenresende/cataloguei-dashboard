@@ -52,6 +52,7 @@ export function useOnBoardController({ onSuccess }: UseOnBoardControllerParams) 
   const onSubmit = async (data: FormData) => {
     const slug = slugify(data.name);
     const fullUrl = buildStorePublicUrl(data.url);
+    const phoneDigits = data.whatsApp.replace(/\D/g, '');
 
     await createStoreMutation.mutateAsync({
       name: data.name.trim(),
@@ -59,7 +60,7 @@ export function useOnBoardController({ onSuccess }: UseOnBoardControllerParams) 
       url: fullUrl,
       description: data.description.trim(),
       email: user?.email || '',
-      whatsappUrl: data.whatsApp.trim(),
+      whatsappUrl: phoneDigits,
     });
 
     form.reset();

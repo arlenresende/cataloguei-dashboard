@@ -73,11 +73,24 @@ export default function Form({ activeConfetti }: FormProps) {
           <Label>
             WhatsApp <span className="text-error-500">*</span>
           </Label>
-          <Input
-            type="tel"
-            placeholder="(11) 99999-9999"
-            {...register('whatsApp')}
-            error={Boolean(errors.whatsApp)}
+          <Controller
+            name="whatsApp"
+            control={control}
+            render={({ field }) => (
+              <Input
+                type="tel"
+                placeholder="(11) 99999-9999"
+                value={field.value}
+                onChange={(e) => {
+                  const digits = e.target.value.replace(/\D/g, '').slice(0, 11);
+                  let formatted = digits;
+                  if (digits.length > 2) formatted = `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+                  if (digits.length > 7) formatted = `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+                  field.onChange(formatted);
+                }}
+                error={Boolean(errors.whatsApp)}
+              />
+            )}
           />
           {errors.whatsApp && (
             <p className="mt-1 text-xs text-error-500">{errors.whatsApp.message as string}</p>
