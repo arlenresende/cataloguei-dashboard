@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useModal } from "../../hooks/useModal";
 import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
@@ -75,11 +76,34 @@ export default function UserMetaCard() {
     },
   });
 
-  const { register, handleSubmit, control, formState: { errors } } = form;
+  const { register, handleSubmit, control, reset, formState: { errors } } = form;
+
+  useEffect(() => {
+    if (store) {
+      reset({
+        name: store.name || "",
+        description: store.description || "",
+        email: store.email || "",
+        logo: store.logo || "",
+        coverImage: store.coverImage || "",
+        websiteUrl: store.websiteUrl || store.url || "",
+        whatsappUrl: formatPhone(store.whatsappUrl || ""),
+        instagramUrl: store.instagramUrl || "",
+        facebookUrl: store.facebookUrl || "",
+        tiktokUrl: store.tiktokUrl || "",
+        phone: formatPhone(store.phone || ""),
+        phoneNumber: formatPhone(store.phoneNumber || ""),
+        cellPhone: formatPhone(store.cellPhone || ""),
+      });
+    }
+  }, [store, reset]);
 
   const handleSave = async (data: StoreFormData) => {
     if (!store?.id) return;
-    await updateStoreMutation.mutateAsync({ id: store.id, data });
+    const clean = Object.fromEntries(
+      Object.entries(data).map(([key, value]) => [key, value === "" ? undefined : value])
+    );
+    await updateStoreMutation.mutateAsync({ id: store.id, data: clean });
     closeModal();
   };
 
