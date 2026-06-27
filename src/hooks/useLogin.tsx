@@ -2,6 +2,7 @@ import { loginRequest, profileRequest, type LoginPayload, type LoginResponse } f
 
 import { useMutation } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useAuth } from './useAuth';
 
@@ -14,6 +15,7 @@ interface ApiEnvelope<T> {
 
 export function useLogin() {
   const { signIn, setProfile } = useAuth();
+  const navigate = useNavigate();
 
   return useMutation<LoginResponse, AxiosError<ApiEnvelope<unknown>>, LoginPayload>({
     mutationFn: loginRequest,
@@ -30,6 +32,7 @@ export function useLogin() {
       }
 
       toast.success('Login realizado com sucesso!');
+      navigate('/', { replace: true });
     },
     onError: (error: AxiosError<ApiEnvelope<unknown>>) => {
       const status = error.response?.status;

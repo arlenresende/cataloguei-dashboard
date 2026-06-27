@@ -55,8 +55,9 @@ export const router = createBrowserRouter([
       </RequireAuth>
     ),
     children: [
-      { index: true, element: <Home /> },
+      {  path: "/", element: <Home /> },
 
+      { path: "dashboard", element: <Home /> },
       { path: "profile", element: <UserProfiles /> },
       { path: "calendar", element: <Calendar /> },
       { path: "blank", element: <Blank /> },

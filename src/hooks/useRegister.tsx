@@ -1,4 +1,4 @@
-import { registerRequest, type LoginResponse, type RegisterPayload } from '@/api/auth';
+import { registerRequest, loginRequest, profileRequest, type LoginResponse, type RegisterPayload } from '@/api/auth';
 
 import { useMutation } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
@@ -14,15 +14,39 @@ interface ApiEnvelope<T> {
 }
 
 export function useRegister() {
-  const { signIn } = useAuth();
+  const { signIn, setProfile } = useAuth();
   const navigate = useNavigate();
 
   return useMutation<LoginResponse, AxiosError<ApiEnvelope<unknown>>, RegisterPayload>({
     mutationFn: registerRequest,
-    onSuccess: (data) => {
-      signIn(data.token, data.user);
+    onSuccess: async (data, variables) => {
+      try {
+        const loginResponse = await loginRequest({
+          email: variables.email,
+          password: variables.password,
+        });
+
+        if (loginResponse?.token) {
+          signIn(loginResponse.token, loginResponse.user);
+
+          try {
+            const profileResponse = await profileRequest();
+            if (profileResponse?.data) {
+              setProfile(profileResponse.data);
+            }
+          } catch (error) {
+            console.error('Erro ao buscar perfil do usuário:', error);
+          }
+        } else {
+          signIn(data.token, data.user);
+        }
+      } catch (error) {
+        console.error('Erro ao fazer login após cadastro:', error);
+        signIn(data.token, data.user);
+      }
+
       toast.success('Cadastro realizado com sucesso!');
-      navigate('/dashboard', { replace: true });
+      navigate('/', { replace: true });
     },
     onError: (error: AxiosError<ApiEnvelope<unknown>>) => {
       const status = error.response?.status;
