@@ -11,7 +11,7 @@ export default function OnBoard() {
   return (
     <>
       {!showModal ? null : (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-white/70 backdrop-blur-sm dark:bg-gray-950/70">
+        <div className="fixed inset-0 z-99999 overflow-y-auto bg-white/70 backdrop-blur-sm dark:bg-gray-950/70">
           <div className="mx-auto w-full max-w-xl px-4 py-10 sm:py-16">
             {!activeConfetti ? (
               <div className="rounded-2xl border border-gray-200 bg-white shadow-theme-xs dark:border-gray-800 dark:bg-gray-900">
