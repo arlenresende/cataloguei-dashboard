@@ -1,6 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { useCreateStore } from '@/hooks/useCreateStore';
+import { useAuth } from '@/hooks/useAuth';
 
 const storeSchema = z.object({
   name: z.string().min(1, { message: 'Por favor, insira um nome para sua loja' }),
@@ -30,21 +32,13 @@ export function buildStorePublicUrl(rawSlug: string) {
   return `https://catalogeui.com.br/${slug}`;
 }
 
-async function createStore(data: {
-  name: string;
-  url: string;
-  description: string;
-  whatsappUrl: string;
-}) {
-  void data;
-  return { success: true };
-}
-
 type UseOnBoardControllerParams = {
   onSuccess: () => void;
 };
 
 export function useOnBoardController({ onSuccess }: UseOnBoardControllerParams) {
+  const { user } = useAuth();
+  const createStoreMutation = useCreateStore();
   const form = useForm<FormData>({
     resolver: zodResolver(storeSchema),
     defaultValues: {
@@ -56,23 +50,26 @@ export function useOnBoardController({ onSuccess }: UseOnBoardControllerParams) 
   });
 
   const onSubmit = async (data: FormData) => {
+    const slug = slugify(data.name);
     const fullUrl = buildStorePublicUrl(data.url);
-    const formatedData = {
+    const phoneDigits = data.whatsApp.replace(/\D/g, '');
+
+    await createStoreMutation.mutateAsync({
       name: data.name.trim(),
+      slug,
       url: fullUrl,
       description: data.description.trim(),
-      whatsappUrl: data.whatsApp.trim(),
-    };
-    const result = await createStore(formatedData);
-    if (result.success) {
-      form.reset();
-      onSuccess();
-    }
+      email: user?.email || '',
+      whatsappUrl: phoneDigits,
+    });
+
+    form.reset();
+    onSuccess();
   };
 
   return {
     form,
-    isPending: form.formState.isSubmitting,
+    isPending: createStoreMutation.isPending,
     onSubmit,
   };
 }

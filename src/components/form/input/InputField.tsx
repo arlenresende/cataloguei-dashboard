@@ -68,7 +68,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           {...rest}
         />
 
-        {hint && <p className="mt-1 text-xs text-gray-500">{hint}</p>}
+        {hint && <p className="mt-1 text-xs text-gray-500 absolute">{hint}</p>}
       </div>
     );
   }

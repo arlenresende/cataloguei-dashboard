@@ -3,9 +3,13 @@ import {  Outlet } from "react-router-dom";
 import AppHeader from "./AppHeader";
 import Backdrop from "./Backdrop";
 import AppSidebar from "./AppSidebar";
+import OnBoard from "@/components/onBoard";
+import { useAuth } from "@/hooks/useAuth";
 
 const LayoutContent: React.FC = () => {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
+  const { user } = useAuth();
+  const hasStores = user?.stores && user.stores.length > 0;
 
   return (
     <div className="min-h-screen xl:flex">
@@ -23,6 +27,7 @@ const LayoutContent: React.FC = () => {
           <Outlet />
         </div>
       </div>
+      {!hasStores && <OnBoard />}
     </div>
   );
 };

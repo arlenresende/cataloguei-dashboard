@@ -29,6 +29,7 @@ interface User {
   profileCompleted?: boolean;
   stripeCustomerId?: string | null;
   address?: Address | null;
+  stores?: { id: string; name: string; slug: string; url: string }[];
 }
 
 interface AuthContextData {
