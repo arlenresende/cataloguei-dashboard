@@ -10,15 +10,15 @@ export function useUpdateStore() {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: UpdateStoreRequest }) =>
       updateStoreRequest(id, data),
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
       const store = response.data;
       if (user?.stores && user.stores.length > 0) {
         updateUserProfile({
           stores: [{ id: store.id, name: store.name, slug: store.slug, url: store.url }],
         });
       }
-      queryClient.invalidateQueries({ queryKey: ["store"] });
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      await queryClient.refetchQueries({ queryKey: ["store", store.id] });
+      await queryClient.refetchQueries({ queryKey: ["profile"] });
       toast.success("Loja atualizada com sucesso!");
     },
     onError: (error: any) => {

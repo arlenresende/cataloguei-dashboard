@@ -1,5 +1,25 @@
 import { type ApiEnvelope } from '@/api/auth';
 
+export interface Address {
+  id: string;
+  street: string;
+  number: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+  zip_code: string;
+  country: string;
+  complement: string | null;
+}
+
+export interface StoreAddressItem {
+  store_id: string;
+  address_id: string;
+  type: string;
+  is_default: boolean;
+  address: Address;
+}
+
 export interface StoreAddress {
   street: string;
   number: string;
@@ -41,6 +61,7 @@ export interface CreateStoreRequest {
   businessHours?: BusinessHours;
   themeStore?: string;
   address?: StoreAddress;
+  storeAddresses?: StoreAddressItem[];
 }
 
 export interface StoreData {
@@ -62,7 +83,8 @@ export interface StoreData {
   cellPhone: string | null;
   businessHours: BusinessHours | null;
   themeStore: string | null;
-  address: StoreAddress | null;
+  storeAddresses: StoreAddressItem[];
+  isActive: boolean;
   userId: string;
   createdAt: string;
   updatedAt: string;

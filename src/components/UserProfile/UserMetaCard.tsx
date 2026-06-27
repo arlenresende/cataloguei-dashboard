@@ -51,8 +51,9 @@ export default function UserMetaCard() {
   const { isOpen, openModal, closeModal } = useModal();
   const updateStoreMutation = useUpdateStore();
 
-  const address = store
-    ? [store.address?.street, store.address?.number, store.address?.neighborhood, store.address?.city, store.address?.state]
+  const storeAddress = store?.storeAddresses?.[0]?.address;
+  const address = storeAddress
+    ? [storeAddress.street, storeAddress.number, storeAddress.neighborhood, storeAddress.city, storeAddress.state]
         .filter(Boolean)
         .join(", ")
     : "";
@@ -110,6 +111,9 @@ export default function UserMetaCard() {
   return (
     <>
       <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
+        <h4 className="text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-6">
+          Informações da Loja
+        </h4>
         <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex flex-col items-center w-full gap-6 xl:flex-row">
             <div className="w-20 h-20 overflow-hidden border border-gray-200 rounded-full dark:border-gray-800">
